@@ -18,6 +18,14 @@ subprojects {
         mavenCentral()
         mavenLocal()
         jcenter()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/treefrogapps/javalibs")
+            credentials {
+                username = project.findProperty("gpr.user")
+                password = project.findProperty("gpr.public_key")
+            }
+        }
     }
 
     apply plugin: "java"

@@ -12,8 +12,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     
     // Projects
-    implementation project(':core')
-    implementation project(':rxjava3')
+    implementation "com.treefrogapps.core:core:1.0.0"
+    implementation "com.treefrogapps.rxjava3:rxjava3:1.0.0"
     
     // Dagger
     def daggerVersion = "2.26"
