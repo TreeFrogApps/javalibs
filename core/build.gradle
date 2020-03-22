@@ -1,0 +1,11 @@
+group 'com.treefrogapps.core'
+project.ext.name = 'core'
+version '1.0.0'
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Logging
+    implementation "org.apache.logging.log4j:log4j-core:2.8.2"
+}
