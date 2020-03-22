@@ -1,1 +1,15 @@
-# HiHi Desktop repository
+# TreeFrogApps Java Libraries
+
+### A collection of libraries for java platform written in Kotlin
+
+
+**Libraries**
+
+- core utils
+- rxjava 3 utils
+- javafx utils (including Dagger2 and RxJava3)
+
+---
+
+#### To use these libraries go to the packages tab and read individual instructions
+
