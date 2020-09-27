@@ -1,6 +1,5 @@
 rootProject.name = 'javalibs'
 
 // Modules
-include 'core'
 include 'javafx'
 include 'rxjava3'

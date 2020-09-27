@@ -1,7 +1,6 @@
 package com.treefrogapps.javafx
 
 
-import com.treefrogapps.core.extensions.ifNull
 import com.treefrogapps.rxjava3.Rx3Schedulers
 import com.treefrogapps.rxjava3.plusAssign
 import com.treefrogapps.rxjava3.rxSubscriber
@@ -71,6 +70,10 @@ open class LayoutStage(private val controllers: MutableMap<Class<out LayoutContr
             currentController.get().onStart()
             scene?.let { it.root = root }.ifNull { scene = Scene(root); show() }
         }
+    }
+
+    private fun Any?.ifNull(func : () -> Unit) {
+        if(this == null) func()
     }
 }
 
