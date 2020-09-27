@@ -1,6 +1,6 @@
 group 'com.treefrogapps.javafx'
 project.ext.name = 'javafx'
-version '1.0.0'
+version '1.0.1'
 
 javafx {
     version = "14"
