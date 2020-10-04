@@ -5,7 +5,6 @@
 
 **Libraries**
 
-- core utils
 - rxjava 3 utils
 - javafx utils (including Dagger2 and RxJava3)
 
