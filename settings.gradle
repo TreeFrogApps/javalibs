@@ -1,5 +1,0 @@
-rootProject.name = 'javalibs'
-
-// Modules
-include 'javafx'
-include 'rxjava3'
