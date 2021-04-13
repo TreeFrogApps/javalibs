@@ -5,8 +5,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     `maven-publish`
     `java-library`
-    kotlin("jvm") version "1.4.30" apply false
-    kotlin("kapt") version "1.4.30" apply false
+    kotlin("jvm") version "1.4.32" apply false
+    kotlin("kapt") version "1.4.32" apply false
     id("org.openjfx.javafxplugin") version "0.0.8" apply false
 }
 

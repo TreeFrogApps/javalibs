@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
 group = "com.treefrogapps.javafx"
 project.extra["name"] = "javafx"
-version = "1.1.0"
+version = "1.2.0"
 
 javafx {
-    version = "14"
+    version = "16"
     modules("javafx.controls", "javafx.fxml")
 }
 
@@ -20,7 +20,7 @@ dependencies {
     implementation("com.treefrogapps.rxjava3:rxjava3:1.1.0")
 
     // Dagger
-    val daggerVersion = "2.30"
+    val daggerVersion = "2.34"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
