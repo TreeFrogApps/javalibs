@@ -2,10 +2,10 @@ package com.treefrogapps.javafx.dagger
 
 import dagger.BindsInstance
 
+@Deprecated("Prefer InitializableComponentFactory")
+abstract class InitializableComponentBuilder<T : DaggerInitializable> : InitializableComponentFactory<T> {
 
-abstract class InitializableComponentBuilder<T : DaggerInitializable> {
-
-    fun create(instance: T): InitializableComponentInjector<T> {
+    override fun create(instance: T): InitializableComponentInjector<T> {
         seedInstance(instance)
         return build()
     }

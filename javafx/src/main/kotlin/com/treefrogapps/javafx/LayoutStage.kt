@@ -57,7 +57,7 @@ open class LayoutStage(private val controllers: MutableMap<Class<out LayoutContr
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : LayoutController> getMatchingController(controller: Class<T>): T? =
-            currentController.get()?.run { if (controller.isInstance(this)) this as T else null }
+            currentController.get()?.run { this as? T? }
 
     private fun onClose() {
         disposable.clear()

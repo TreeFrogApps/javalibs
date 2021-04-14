@@ -12,7 +12,7 @@ abstract class DaggerApplication : Application(), HasInitializableInjector {
     @Inject lateinit var initializableInjector: InitializableInjector
 
     companion object {
-        var app: Application? = null
+        internal var app: Application? = null
     }
 
     @Suppress("UNCHECKED_CAST")

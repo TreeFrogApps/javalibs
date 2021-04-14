@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  * @param stages map of Stage Class types to their corresponding [LayoutStage] instance
  *
  * */
-@Singleton class LayoutStageManager @Inject constructor(private val stages: MutableMap<Class<out LayoutStage>, LayoutStage>) {
+@Singleton class LayoutStageManager @Inject constructor(private val stages: @JvmSuppressWildcards Map<Class<out LayoutStage>, LayoutStage>) {
 
     @MapKey annotation class StageKey(val value: KClass<out LayoutStage>)
 
