@@ -7,12 +7,12 @@ import javax.inject.Inject
 /**
  * Main [Application] super type for all automatic dependency injection subtypes
  */
-abstract class DaggerApplication : Application(), HasInitializableInjector {
+abstract class DaggerApplication : Application(), HasControllerComponentFactory {
 
-    @Inject lateinit var initializableInjector: InitializableInjector
+    @Inject lateinit var componentFactory: ControllerComponentFactory
 
     companion object {
-        internal var app: Application? = null
+        internal var app: DaggerApplication? = null
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -22,7 +22,7 @@ abstract class DaggerApplication : Application(), HasInitializableInjector {
             .inject(this)
     }
 
-    override fun controllerInjector(): InitializableInjector = initializableInjector
+    override fun controllerInjector(): ControllerComponentFactory = componentFactory
 
     protected abstract fun component(): ApplicationInjector<out DaggerApplication>
 }

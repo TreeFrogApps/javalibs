@@ -6,5 +6,9 @@ interface Scopes {
 
     @Scope
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class InitializableScope
+    annotation class ControllerScope
+
+    @Scope
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class ChildControllerScope
 }

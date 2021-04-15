@@ -1,18 +1,20 @@
 package com.treefrogapps.javafx
 
 
+import com.treefrogapps.javafx.dagger.ControllerComponent
+import com.treefrogapps.javafx.dagger.ControllerComponentHelper
+import com.treefrogapps.javafx.dagger.DaggerApplication
 import com.treefrogapps.rxjava3.Rx3Schedulers
 import com.treefrogapps.rxjava3.plusAssign
 import com.treefrogapps.rxjava3.rxSubscriber
 import com.treefrogapps.rxjava3.withSchedulers
-import dagger.MapKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javafx.scene.Scene
 import javafx.stage.Stage
 import javafx.stage.StageStyle
+import javafx.util.Callback
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.reflect.KClass
 
 /**
  * This class allows control of the JavaFX Application user interface and should be used to conduct all UI transitions
@@ -24,13 +26,11 @@ import kotlin.reflect.KClass
  * in one as the concept on [LayoutController] which has a class and fxml layout associated with it.  Also unlike Android
  * this implementation, so far, has no concept of task stacks.  This *could* be implemented but currently is not.
  */
-open class LayoutStage(private val controllers: MutableMap<Class<out LayoutController>, String>,
-                       protected val inflater: LayoutInflater,
-                       protected val schedulers: Rx3Schedulers,
-                       protected val bundle: ResourceBundle,
-                       style: StageStyle = StageStyle.DECORATED) : Stage(style) {
-
-    @MapKey annotation class ControllerKey(val value: KClass<out LayoutController>)
+open class LayoutStage(
+    protected val inflater: LayoutInflater,
+    protected val schedulers: Rx3Schedulers,
+    protected val bundle: ResourceBundle,
+    style: StageStyle = StageStyle.DECORATED) : Stage(style) {
 
     private val currentController: AtomicReference<LayoutController> = AtomicReference()
     private val disposable: CompositeDisposable = CompositeDisposable()
@@ -40,24 +40,29 @@ open class LayoutStage(private val controllers: MutableMap<Class<out LayoutContr
     }
 
     fun <T : LayoutController> updateOrLoad(controller: Class<T>, args: Map<String, String>) {
-        getMatchingController(controller)?.updateArgs(args)
-                .ifNull { loadLayout(controller, args) }
+        getMatchingController(controller)?.updateArgs(args).ifNull {
+            createControllerComponent(controller)?.controllerFactory()
+                ?.run { loadLayout(callback(), layout(), args) }
+        }
     }
 
     protected fun updateCurrentController(args: Map<String, String>) {
         currentController.get()?.updateArgs(args)
     }
 
-    private fun <T : LayoutController> loadLayout(controller: Class<T>, args: Map<String, String>) {
-        disposable += controllers[controller]
-                ?.let { inflater.inflate(it, bundle, args) }
-                ?.withSchedulers(schedulers.io(), schedulers.main())
-                ?.rxSubscriber(this::changeLayout)
+    private fun <T : LayoutController> createControllerComponent(controller: Class<T>): ControllerComponent<T>? =
+        ControllerComponentHelper.assistedCreate(controller, DaggerApplication.app)
+
+    private fun <T : LayoutController> loadLayout(provider: Callback<Class<T>, T>, layoutResource: String, args: Map<String, String>) {
+        disposable +=
+            inflater.inflate(provider, layoutResource, bundle, args)
+                .withSchedulers(schedulers.io(), schedulers.main())
+                .rxSubscriber(this::changeLayout)
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : LayoutController> getMatchingController(controller: Class<T>): T? =
-            currentController.get()?.run { this as? T? }
+        currentController.get()?.run { if (controller.isInstance(this)) this as T else null }
 
     private fun onClose() {
         disposable.clear()
@@ -72,8 +77,8 @@ open class LayoutStage(private val controllers: MutableMap<Class<out LayoutContr
         }
     }
 
-    private fun Any?.ifNull(func : () -> Unit) {
-        if(this == null) func()
+    private fun Any?.ifNull(func: () -> Unit) {
+        if (this == null) func()
     }
 }
 

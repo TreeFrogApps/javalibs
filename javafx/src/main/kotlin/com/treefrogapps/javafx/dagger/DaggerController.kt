@@ -8,7 +8,7 @@ import java.util.*
 /**
  * Super type for all sub-classes that want automatic injection
  */
-abstract class DaggerInitializable : Initializable {
+abstract class DaggerController : Initializable {
 
     protected var resources : ResourceBundle? = null
 
@@ -22,7 +22,6 @@ abstract class DaggerInitializable : Initializable {
      */
     final override fun initialize(location: URL?, resources: ResourceBundle?) {
         Platform.runLater {
-            InitializableInjection.inject(this, DaggerApplication.app)
             this.resources = resources
             onInitialized(location)
         }

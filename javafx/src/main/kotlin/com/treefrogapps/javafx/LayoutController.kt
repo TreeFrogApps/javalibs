@@ -1,6 +1,6 @@
 package com.treefrogapps.javafx
 
-import com.treefrogapps.javafx.dagger.DaggerInitializable
+import com.treefrogapps.javafx.dagger.DaggerController
 
 /**
  * Super type for all sub-classes that should be included for
@@ -9,7 +9,7 @@ import com.treefrogapps.javafx.dagger.DaggerInitializable
  * [onStart]
  * [onStop]
  */
-abstract class LayoutController : DaggerInitializable() {
+abstract class LayoutController : DaggerController() {
 
     protected val args: MutableMap<String, String> = mutableMapOf()
 
@@ -23,11 +23,11 @@ abstract class LayoutController : DaggerInitializable() {
     }
 
     /**
-     * Called when this [LayoutController] is currently in the foreground
+     * Called when this [DaggerController] is currently in the foreground
      * but provided new arguments.  This hook can be called more than once per
      * instance and allows for updating arguments in the current instance.
      *
-     * @param args new arguments provided to this [LayoutController]
+     * @param args new arguments provided to this [DaggerController]
      */
     protected abstract fun onUpdate(args: Map<String, String>)
 
@@ -39,9 +39,9 @@ abstract class LayoutController : DaggerInitializable() {
     /**
      * Called after [onStart]. This will only be called once per instance
      *
-     * This hook method should be used to do any cleanup on the current [LayoutController]
+     * This hook method should be used to do any cleanup on the current [DaggerController]
      * as it is no longer in the foreground either because the window has been closed, or another
-     * [LayoutController] is now in the foreground.
+     * [DaggerController] is now in the foreground.
      */
     abstract fun onStop()
 }
