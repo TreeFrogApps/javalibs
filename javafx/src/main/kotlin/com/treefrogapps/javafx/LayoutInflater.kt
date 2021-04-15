@@ -15,6 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class LayoutInflater @Inject constructor() {
 
+    fun <V : Parent> inflate(layoutResource: String): V  = createLoader(layoutResource).load()
+
     internal fun <T : DaggerController> inflate(
         controllerFactory: Callback<Class<T>, T>,
         layoutResource: String,
@@ -37,4 +39,7 @@ class LayoutInflater @Inject constructor() {
                    bundle,
                    null,
                    controllerFactory as Callback<Class<*>, Any>)
+
+    private fun createLoader(layoutResource: String): FXMLLoader =
+        FXMLLoader(LayoutInflater::class.java.getResource("/layout/${layoutResource}.fxml"))
 }
