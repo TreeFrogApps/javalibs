@@ -8,8 +8,58 @@
 - javafx utils (including Dagger2 and RxJava3)
 
 ---
+###### To use these libraries go to the packages tab and download the jar. 
+###### An alternative using as library dependency this will require credentials available on request :
 
-<br>
+
+- repo url
+- repo username
+- repo password
+
+project `build.gradle.kts` :
+```
+plugins {
+    kotlin("jvm") version "1.4.32" apply false
+}
+
+repositories {
+        ... other repositories
+        maven {
+            name = "GitHubPackages"
+            url = [repo url]
+            credentials {
+                username = [repo username]
+                password = [repo password]
+            }
+        }
+    }
+```
+
+module : `build.gradle.kts`
+````
+plugins {
+    ... other plugins
+    application
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.kapt")
+    id("org.openjfx.javafxplugin") version "0.0.9"
+}
+
+dependencies {
+    ... other dependencies
+    
+    implementation("com.treefrogapps.rxjava3:rxjava3:x.x.x")
+    implementation("com.treefrogapps.javafx:javafx:x.x.x")
+
+    // Dagger
+    val daggerVersion = "2.34"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+}
+````
+---
+
+
 
 ### JavaFX Dagger Application Setup
 
@@ -136,6 +186,31 @@ interface MyAppComponent : ApplicationInjector<MyApp> {
 }
 ```
 
-<br>
+All interactions for loading `LayoutStage` and child `LayoutController` classes
+and are performed through `LayoutStageManager`. Typical usage in main `DaggerApplication` class :
 
-###### To use these libraries go to the packages tab and read individual instructions.  This will require a public key which should NOT be included in any committed code, if so keys are automatically revoked.
+```
+class MyApp : DaggerApplication() {
+
+    // Inject the LayoutManager - this is a singleton class
+    // and can be injected anywhere
+    @Inject lateinit var layoutStageManager: LayoutStageManager
+
+    override fun start(primaryStage: Stage) {
+        super.start(primaryStage)
+
+       // Use the manager to launch the required Stage and Controller for the stage.
+       // Controllers are children of a stage - each stage can have n number of children
+       // Each Stage has its own scene. The LayoutStageManager supports n number of Stages
+        layoutStageManager.launch(
+            MyLayoutStage::class.java,
+            MyLayoutController::class.java,
+            mapOf("my" to "arugments")))
+    }
+
+    override fun component(): ApplicationInjector<out DaggerApplication> =
+        DaggerSensorMonitorAppComponent.factory().addApp(this)
+}
+```
+
+
