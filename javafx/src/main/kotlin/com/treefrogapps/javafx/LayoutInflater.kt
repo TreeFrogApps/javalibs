@@ -24,9 +24,12 @@ class LayoutInflater @Inject constructor() {
             }
         }.getOrNull()
 
-    fun <T : Initializable, V : Parent> inflate(layoutResource: String, callback: Callback<Class<T>, T>? = null): V? =
+    fun <T : Initializable, V : Parent> inflate(layoutResource: String, callback: Callback<Class<T>, T>? = null): T? =
         runCatching {
-            createLoader(layoutResource, callback).load<V>()
+            createLoader(layoutResource, callback).run {
+                    load<V>()
+                getController<T>()
+            }
         }.getOrNull()
 
     internal fun <T : DaggerController> inflate(
