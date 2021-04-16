@@ -16,18 +16,18 @@ object ObservableValueFlowable {
      */
     fun <T> ObservableValue<T>.toValueFlowable(strategy: BackpressureStrategy = LATEST): Flowable<T> =
         Flowable.create({ e ->
-                            val l = InvalidationListener { e.onNext(value) }
-                            addListener(l)
-                            e.setCancellable { removeListener(l) }
-                        }, strategy)
+            val l = InvalidationListener { e.onNext(value) }
+            addListener(l)
+            e.setCancellable { removeListener(l) }
+        }, strategy)
 
     /**
      * Adapts the given [ObservableValue] to a [ChangeEvent] [Flowable].
      */
     fun <T> ObservableValue<T>.toChangeFlowable(strategy: BackpressureStrategy = LATEST): Flowable<ChangeEvent<T>> =
         Flowable.create({ e ->
-                            val l: ChangeListener<T> = ChangeListener<T> { _, o, n -> e.onNext(ChangeEvent(o, n)) }
-                            addListener(l)
-                            e.setCancellable { removeListener(l) }
-                        }, strategy)
+            val l: ChangeListener<T> = ChangeListener<T> { _, o, n -> e.onNext(ChangeEvent(o, n)) }
+            addListener(l)
+            e.setCancellable { removeListener(l) }
+        }, strategy)
 }

@@ -11,7 +11,7 @@ import javafx.collections.ObservableList
 
 object ObservableListFlowable {
 
-    class DisposableObservableList<T> : ObservableList<T> by FXCollections.synchronizedObservableList(FXCollections.emptyObservableList<T>()) {
+    class DisposableObservableList<T> : ObservableList<T> by FXCollections.synchronizedObservableList(FXCollections.observableArrayList<T>()) {
 
         private var disposable: Disposable? = null
         fun setDisposable(disposable: Disposable) {
@@ -25,22 +25,20 @@ object ObservableListFlowable {
         }
     }
 
-
     /**
      * Adapts the given [Flowable] to a ReactiveStreams [ObservableList].
      */
-    fun <T> Flowable<T>.toObservableList(): DisposableObservableList<T> =
+    fun <T> Flowable<List<T>>.toObservableList(): DisposableObservableList<T> =
         DisposableObservableList<T>()
             .apply { rxSubscriber(next = { clear(); addAll(it) }).let(this::setDisposable) }
-
 
     /**
      * Adapts the given [ObservableList] to a [Flowable].
      */
     fun <T> ObservableList<T>.toFlowable(strategy: BackpressureStrategy = LATEST): Flowable<List<T>> =
         Flowable.create({ e ->
-                            val l = InvalidationListener { e.onNext(this.toList()) }
-                            addListener(l)
-                            e.setCancellable { removeListener(l) }
-                        }, strategy)
+            val l = InvalidationListener { e.onNext(this.toList()) }
+            addListener(l)
+            e.setCancellable { removeListener(l) }
+        }, strategy)
 }
