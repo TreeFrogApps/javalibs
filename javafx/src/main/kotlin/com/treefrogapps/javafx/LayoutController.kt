@@ -1,6 +1,7 @@
 package com.treefrogapps.javafx
 
 import com.treefrogapps.javafx.dagger.DaggerController
+import javafx.stage.Stage
 
 /**
  * Super type for all sub-classes that should be included for
@@ -34,7 +35,7 @@ abstract class LayoutController : DaggerController() {
     /**
      * Called after [onInitialized] and before [onStop]. This will only be called once per instance
      */
-    abstract fun onStart()
+    abstract fun onStart(parent : Stage)
 
     /**
      * Called after [onStart]. This will only be called once per instance
