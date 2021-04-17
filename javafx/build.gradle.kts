@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
 group = "com.treefrogapps.javafx"
 project.extra["name"] = "javafx"
-version = "2.3.2"
+version = "2.3.4"
 
 javafx {
     version = "16"
