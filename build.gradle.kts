@@ -65,21 +65,17 @@ subprojects {
     }
 
     val javaVersion = "11"
+    val compileKotlin: KotlinCompile by tasks
+    val compileJava: JavaCompile by tasks
+    val kapt : KaptExtension by extensions
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = javaVersion
-    }
-
-    tasks.withType<JavaCompile> {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-    }
+    compileKotlin.kotlinOptions.jvmTarget = javaVersion
+    compileJava.sourceCompatibility = javaVersion
+    compileJava.targetCompatibility = javaVersion
+    kapt.includeCompileClasspath = false
 
     tasks.withType<Test> {
         testLogging { events = mutableSetOf(PASSED, SKIPPED, FAILED) }
     }
 
-    extensions.getByType<KaptExtension>().run {
-        includeCompileClasspath = false
-    }
 }

@@ -1,18 +1,11 @@
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "com.treefrogapps.javafx"
 project.extra["name"] = "javafx"
 version = "2.5.0"
 
-val javaVersion = "11"
 val javaFxVersion = "16"
-val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
-val compileJava: JavaCompile by tasks
-
-compileKotlin.kotlinOptions.jvmTarget = javaVersion
-compileJava.sourceCompatibility = javaVersion
-compileJava.targetCompatibility = javaVersion
-
 
 javafx {
     version = javaFxVersion
