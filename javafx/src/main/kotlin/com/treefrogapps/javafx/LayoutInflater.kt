@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
 import javafx.scene.Parent
 import javafx.util.Callback
+import java.net.URL
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class LayoutInflater @Inject constructor() {
 
-    fun <T : Initializable, V : Parent> inflate(layoutResource: String, controller: T? = null): V? =
+    fun <T : Initializable, V : Parent> inflate(layoutResource: URL, controller: T? = null): V? =
         runCatching {
             createLoader<T>(layoutResource).run {
                 setController(controller)
@@ -24,17 +25,17 @@ class LayoutInflater @Inject constructor() {
             }
         }.getOrNull()
 
-    fun <T : Initializable, V : Parent> inflate(layoutResource: String, callback: Callback<Class<T>, T>? = null): T? =
+    fun <T : Initializable, V : Parent> inflate(layoutResource: URL, callback: Callback<Class<T>, T>? = null): T? =
         runCatching {
             createLoader(layoutResource, callback).run {
-                    load<V>()
+                load<V>()
                 getController<T>()
             }
         }.getOrNull()
 
     internal fun <T : DaggerController> inflate(
         controllerFactory: Callback<Class<T>, T>,
-        layoutResource: String,
+        layoutResource: URL,
         bundle: ResourceBundle,
         args: Map<String, String> = mapOf()): Single<Layout> =
         Single.fromCallable { createLoader(layoutResource, controllerFactory, bundle) }
@@ -47,11 +48,12 @@ class LayoutInflater @Inject constructor() {
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : Initializable> createLoader(
-        layoutResource: String,
+        location: URL,
         callback: Callback<Class<T>, T>? = null,
         bundle: ResourceBundle? = null): FXMLLoader =
-        FXMLLoader(LayoutInflater::class.java.getResource("/layout/${layoutResource}.fxml"),
-                   bundle,
-                   null,
-                   callback as? Callback<Class<*>, Any>?)
+        FXMLLoader(
+            location,
+            bundle,
+            null,
+            callback as? Callback<Class<*>, Any>?)
 }

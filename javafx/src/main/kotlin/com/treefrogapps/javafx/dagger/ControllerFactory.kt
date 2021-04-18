@@ -1,6 +1,7 @@
 package com.treefrogapps.javafx.dagger
 
 import javafx.util.Callback
+import java.net.URL
 
 /**
  * Interface controller factory [Callback] and layout resource name.
@@ -22,5 +23,5 @@ interface ControllerFactory<T : DaggerController> {
      *
      * @return layout resource name
      */
-    fun layout(): String
+    fun layoutLocation(): URL
 }

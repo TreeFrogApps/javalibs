@@ -13,6 +13,7 @@ import javafx.scene.Scene
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.util.Callback
+import java.net.URL
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
@@ -42,7 +43,7 @@ open class LayoutStage(
     fun <T : LayoutController> updateOrLoad(controller: Class<T>, args: Map<String, String>) {
         getMatchingController(controller)?.updateArgs(args).ifNull {
             createControllerComponent(controller)?.controllerFactory()
-                ?.run { loadLayout(callback(), layout(), args) }
+                ?.run { loadLayout(callback(), layoutLocation(), args) }
         }
     }
 
@@ -53,7 +54,7 @@ open class LayoutStage(
     private fun <T : LayoutController> createControllerComponent(controller: Class<T>): ControllerComponent<T>? =
         ControllerComponentHelper.assistedCreate(controller, DaggerApplication.app)
 
-    private fun <T : LayoutController> loadLayout(provider: Callback<Class<T>, T>, layoutResource: String, args: Map<String, String>) {
+    private fun <T : LayoutController> loadLayout(provider: Callback<Class<T>, T>, layoutResource: URL, args: Map<String, String>) {
         disposable +=
             inflater.inflate(provider, layoutResource, bundle, args)
                 .withSchedulers(schedulers.io(), schedulers.main())
