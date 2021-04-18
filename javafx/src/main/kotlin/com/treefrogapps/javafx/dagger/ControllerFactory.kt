@@ -16,12 +16,9 @@ interface ControllerFactory<T : DaggerController> {
     fun  callback(): Callback<Class<T>, T>
 
     /**
-     * The layout for this controller.
+     * The layout [URL] for this controller from a resource location  ie. /fxml/my_layout.fxml
      *
-     * The layout should be inside resources/layout/ folder and named without extension and without extension.
-     * For example : file = /resources/layout/my_layout.fxml, layout resource = my_layout
-     *
-     * @return layout resource name
+     * @return layout resource location as [URL]
      */
     fun layoutLocation(): URL
 }
