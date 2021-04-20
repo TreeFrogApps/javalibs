@@ -1,9 +1,8 @@
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "com.treefrogapps.javafx"
 project.extra["name"] = "javafx"
-version = "2.5.1"
+version = "2.5.2"
 
 val javaFxVersion = "16"
 

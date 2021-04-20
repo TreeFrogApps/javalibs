@@ -73,8 +73,8 @@ open class LayoutStage(
     private fun changeLayout(layout: Layout) {
         with(layout) {
             currentController.getAndSet(controller)?.onStop()
-            currentController.get().onStart(this@LayoutStage)
             scene?.let { it.root = root }.ifNull { scene = Scene(root); show() }
+            currentController.get().onStart(this@LayoutStage)
         }
     }
 
