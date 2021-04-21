@@ -9,16 +9,13 @@ import javafx.beans.InvalidationListener
 import javafx.collections.FXCollections.observableArrayList
 import javafx.collections.FXCollections.synchronizedObservableList
 import javafx.collections.ObservableList
+import javafx.scene.control.ListView
 import java.util.function.Predicate
 import java.util.function.UnaryOperator
 
 object ObservableListFlowable {
 
-    interface DisposableList {
-        fun dispose()
-    }
-
-    open class MutableDisposableObservableList<T> internal constructor() : DisposableList,
+    open class MutableDisposableObservableList<T> internal constructor() : Disposable,
         ObservableList<T> by synchronizedObservableList(observableArrayList<T>()) {
 
         private var disposable: Disposable? = null
@@ -32,12 +29,15 @@ object ObservableListFlowable {
             this.disposable?.dispose()
             this.disposable = null
         }
+
+        override fun isDisposed(): Boolean = disposable?.isDisposed == true
     }
 
     class DisposableObservableList<T> internal constructor(private val delegate: MutableDisposableObservableList<T>)
-        : DisposableList, ObservableList<T> by delegate {
+        : Disposable, ObservableList<T> by delegate {
 
         override fun dispose() = delegate.dispose()
+        override fun isDisposed(): Boolean = delegate.isDisposed
 
         override fun sort(c: Comparator<in T>?) = throwError()
         override fun replaceAll(operator: UnaryOperator<T>) = throwError()
@@ -62,10 +62,11 @@ object ObservableListFlowable {
     /**
      * Adapts the given [Flowable] to a ReactiveStreams [ObservableList].
      */
-    fun <T> Flowable<List<T>>.toObservableList(): DisposableObservableList<T> =
+    fun <T> Flowable<List<T>>.toObservableList(target : ListView<T>? = null): DisposableObservableList<T> =
         MutableDisposableObservableList<T>()
             .apply { rxSubscriber(next = { clear(); addAll(it) }).let(this::setDisposable) }
             .let(::DisposableObservableList)
+            .apply { target?.items = this }
 
     /**
      * Adapts the given [ObservableList] to a [Flowable].
